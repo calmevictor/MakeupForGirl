@@ -2,7 +2,9 @@ package fr.domain.vc.makeupformygirl.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class MakeUp {
+import java.io.Serializable;
+
+public class MakeUp implements Serializable  {
     @SerializedName("id")
     private String id;
 
@@ -15,6 +17,11 @@ public class MakeUp {
 
     @SerializedName("image_link")
     private String image_link;
+
+
+    private String price;
+    private String price_sign;
+    private String description;
 
     /*
     @SerializedName("price_sign")
@@ -42,7 +49,19 @@ public class MakeUp {
     public String getImage_link() {
         return image_link;
     }
-/*
+
+    public String getPrice() {
+        return price;
+    }
+
+    public String getPrice_sign() {
+        return price_sign;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+    /*
     public String getPrice_sign() {
         return price_sign;
     }

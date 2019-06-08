@@ -1,5 +1,6 @@
 package fr.domain.vc.makeupformygirl.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,13 +31,27 @@ public class Adapter  extends RecyclerView.Adapter<Adapter.ViewHolder> {
         public ImageView img;
         public View layout;
 
-        public ViewHolder(View v) {
-            super(v);
-            layout = v;
-            txtHeader = (TextView) v.findViewById(R.id.firstLine);
-            txtFooter = (TextView) v.findViewById(R.id.secondLine);
-            img = (ImageView)v.findViewById((R.id.icon));
+        public ViewHolder(View view) {
+            super(view);
+            layout = view;
+            txtHeader = (TextView) view.findViewById(R.id.firstLine);
+            txtFooter = (TextView) view.findViewById(R.id.secondLine);
+            img = (ImageView)view.findViewById((R.id.icon));
+            //values = makeUpList;
+
+            itemView.setOnClickListener(v -> {
+                Intent newIntent = new Intent(v.getContext(), SecondActivity.class);
+                newIntent.putExtra("MakeUp", values.get(getAdapterPosition()));
+                v.getContext().startActivity(newIntent);
+            });
+
         }
+
+        /*public void onClick(View v) {
+            Intent intent = new Intent(v.getContext(), SecondActivity.class);
+            intent.putExtra("MakeUp", values.get(getAdapterPosition()));
+            v.getContext().startActivity(intent);
+        }*/
     }
 
     public void add(int position, MakeUp item) {
@@ -48,6 +63,8 @@ public class Adapter  extends RecyclerView.Adapter<Adapter.ViewHolder> {
         values.remove(position);
         notifyItemRemoved(position);
     }
+
+
     private static final String SelectedMakeUp = "selected_MakeUp";
     public void infoDisplay(int position){
         Log.d("position", String.valueOf(position));
@@ -57,12 +74,9 @@ public class Adapter  extends RecyclerView.Adapter<Adapter.ViewHolder> {
         ArrayList<String> MakeUp= new ArrayList<>() ;
         MakeUp.add(selectedMakeUp.getBrand());
         MakeUp.add(selectedMakeUp.getName());
-
-
-        /*MakeUp.add(selectedMakeUp.getBrand());
+        MakeUp.add(selectedMakeUp.getPrice());
         MakeUp.add(selectedMakeUp.getPrice_sign());
-        MakeUp.add(selectedMakeUp.getCurrency());
-        MakeUp.add(selectedMakeUp.getCategory());*/
+        MakeUp.add(selectedMakeUp.getDescription());
         infoIntent.putStringArrayListExtra(SelectedMakeUp,MakeUp);
 // Start the new activity.
         mainActivity.startActivity(infoIntent);
@@ -77,33 +91,29 @@ public class Adapter  extends RecyclerView.Adapter<Adapter.ViewHolder> {
     // Create new views (invoked by the layout manager)
     @Override
     public Adapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(R.layout.row_layout, parent, false);
-        // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
-
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.row_layout, parent, false);
+        return new ViewHolder(view);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         this.position = position;
+
+        MakeUp mu = values.get(position);
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        final MakeUp selectedMakeUp = values.get(position);
-        holder.txtHeader.setText(selectedMakeUp.getName());
 
-        holder.txtFooter.setText("Marque : " + selectedMakeUp.getBrand());
+       // private MakeUp selectedMakeUp = values.get(position);
+
+
+        holder.txtHeader.setText(mu.getName());
+        holder.txtFooter.setText("Marque : " + mu.getBrand());
         Log.d("URL", String.valueOf(position));
-        Glide.with(holder.itemView).load(selectedMakeUp.getImage_link()).into(holder.img);
+        Glide.with(holder.itemView).load(mu.getImage_link()).into(holder.img);
         //Picasso.get().load(selectedMakeUp.getImage_link()).into(image);
-        holder.layout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v){
-                infoDisplay(position);
-            }
-        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)

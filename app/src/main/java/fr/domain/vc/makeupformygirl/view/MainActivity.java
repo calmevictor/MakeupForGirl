@@ -1,6 +1,7 @@
 package fr.domain.vc.makeupformygirl.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +27,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
-        controller = new MyController(this, Injection.getRestApi());
+        controller = new MyController(this, Injection.getRestApi(), this.getSharedPreferences("user_prefs", Context.MODE_PRIVATE));
         controller.onCreate();
     }
     public void showList(List<MakeUp> ghibliList) {
